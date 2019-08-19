@@ -67,7 +67,7 @@ func GetBlockHandler(w http.ResponseWriter, r *http.Request) {
 	// retuning anything in the body regardless of any error code
 	// it may contain
 	_, _, body, _ := dataCollection.GetBlock(blockID, config.DefaultRequestsTimeout)
-	writeResponse(body,&w)
+	writeResponse(body, &w)
 }
 
 // GetTransactionHandler is the handler that manage the caching and execution of the  GetTransaction function that will contact
@@ -84,18 +84,18 @@ func GetTransactionHandler(w http.ResponseWriter, r *http.Request) {
 	if param["blockId"] > tmp {
 		w.WriteHeader(http.StatusBadRequest)
 		err := fmt.Errorf("requested id %d latest %d", param["blockId"], lastBlock)
-		log.Println( err.Error())
+		log.Println(err.Error())
 		_, _ = w.Write([]byte(err.Error()))
 		return
 	}
 	// retuning anything in the body regardless of any error code
 	// it may contain
 	_, _, body, _ := dataCollection.GetTransaction(param["blockId"], param["txId"], config.DefaultRequestsTimeout)
-	writeResponse(body,&w)
+	writeResponse(body, &w)
 }
 
 // writeResponse writes the response.
-func writeResponse(body []byte,w *http.ResponseWriter){
+func writeResponse(body []byte, w *http.ResponseWriter) {
 	(*w).Header().Set("Content-Type", "text/plain; charset=utf-8")
 	_, err := (*w).Write(body)
 	if err != nil {

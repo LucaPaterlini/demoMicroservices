@@ -137,7 +137,7 @@ var testCasesGetTransaction = []handlerTest{
 		requestTimeout:       time.Second,
 		requestPath:          "/v1/12/0",
 		requestPathSignature: "/v1/{blockId:[0-9]+}/{txId:[0-9]+}",
-		expectedW:            &httptest.ResponseRecorder{Code: 200, HeaderMap: http.Header{"Content-Type":{"text/plain; charset=utf-8"}}, Body: new(bytes.Buffer)},
+		expectedW:            &httptest.ResponseRecorder{Code: 200, HeaderMap: http.Header{"Content-Type": {"text/plain; charset=utf-8"}}, Body: new(bytes.Buffer)},
 		expectedBodyBytes:    []byte(`{"jsonrpc":"2.0","id":12,"result":null}`),
 		description:          "legit request block 12 tx 0",
 	},

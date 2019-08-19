@@ -34,7 +34,7 @@ func apiCallPOST(jsonStr []byte, requestTimeout time.Duration) (statusCode int, 
 
 // GetBlock using the third party api gets the data of the requested block,
 // if the third party is not able to provide an answer within the requested timeout it returns timeout error.
-func GetBlock(blockNumber uint64, requestTimeout time.Duration) (int, map[string][]string, []byte,  error) {
+func GetBlock(blockNumber uint64, requestTimeout time.Duration) (int, map[string][]string, []byte, error) {
 	var jsonStr = []byte(fmt.Sprintf(`{"jsonrpc":"2.0","method":"eth_getBlockByNumber",
 		"params": ["0x%x",false],"id":1}`, blockNumber))
 	return apiCallPOST(jsonStr, requestTimeout)
@@ -42,7 +42,7 @@ func GetBlock(blockNumber uint64, requestTimeout time.Duration) (int, map[string
 
 // GetTransaction using the third party api gets the data of the requested transaction,
 // if the third party is not able to provide an answer within the requested timeout it returns timeout error.
-func GetTransaction(blockNumber, index uint64, requestTimeout time.Duration) (int, map[string][]string, []byte,  error) {
+func GetTransaction(blockNumber, index uint64, requestTimeout time.Duration) (int, map[string][]string, []byte, error) {
 	var jsonStr = []byte(fmt.Sprintf(`{"jsonrpc":"2.0","method":"eth_getTransactionByBlockNumberAndIndex",
 		"params": ["0x%x","0x0"],"id":%d}`, blockNumber, index))
 	return apiCallPOST(jsonStr, requestTimeout)

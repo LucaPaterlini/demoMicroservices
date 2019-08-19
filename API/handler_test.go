@@ -39,7 +39,7 @@ func testHandler(t *testing.T, f func(http.ResponseWriter, *http.Request), testC
 			t.Errorf(description + "\n error while ready response body")
 			continue
 		}
-		if !bytes.HasPrefix(gotBodyBytes,tc.expectedBodyBytes) {
+		if !bytes.HasPrefix(gotBodyBytes, tc.expectedBodyBytes) {
 			t.Errorf(description+"\nExpected: %s\nGot     : %s", tc.expectedBodyBytes, gotBodyBytes)
 		}
 	}

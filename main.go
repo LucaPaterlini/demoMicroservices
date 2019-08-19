@@ -39,7 +39,7 @@ func main() {
 
 	memcached, err := memory.NewAdapter(
 		memory.AdapterWithAlgorithm(memory.LRU),
-		memory.AdapterWithCapacity(1000),
+		memory.AdapterWithCapacity(config.CacheSize),
 	)
 	if err != nil {
 		log.Println(err)
@@ -68,13 +68,13 @@ func main() {
 	handler = logger.LogRequest(handler)
 
 	srv := &http.Server{
-		Addr: config.DefaultAddr,
+		Addr:         config.DefaultAddr,
 		WriteTimeout: time.Minute * 10,
 		ReadTimeout:  time.Second * 15,
-		IdleTimeout: time.Second * 60,
+		IdleTimeout:  time.Second * 60,
 		// log the requests compress the handler (its safe as its now no user input data or tls),
 		// limit the access for each user
-		Handler:  accessLimit.Limit(handler,*limiterActive),
+		Handler: accessLimit.Limit(handler, *limiterActive),
 	}
 
 	log.Fatal(srv.ListenAndServe())
