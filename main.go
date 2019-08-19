@@ -19,6 +19,7 @@ import (
 var limiterActive = flag.Bool("limiter", false, "activate limiter filter")
 
 func main() {
+	flag.Parse()
 	// declaring the routes
 	router := mux.NewRouter().PathPrefix("/v1/").Subrouter()
 	router.HandleFunc("/block/{blockId:[0-9]+}", API.GetBlockHandler).Methods(http.MethodGet)

@@ -20,7 +20,6 @@ COPY go.sum .
 ## install all the go modules required
 RUN go mod download
 
-
 RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflags "-static"' -o main .
 
 # execution docker
@@ -29,5 +28,3 @@ COPY --from=builder /build/main /app/
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 WORKDIR /app
 CMD ["./main"]
-
-# Opening the ports for the service
