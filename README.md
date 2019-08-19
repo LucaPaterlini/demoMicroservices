@@ -7,11 +7,11 @@ To keep the system simple and ready to be scale I have choose to complete this t
 [redis](https://github.com/antirez/redis)], though it can easily configured thanks to
 choice of using [http-cache](https://github.com/victorspringer/http-cache/).
 
-My vision is to used this package inside a docker container and substitute the direct calls
+My idea is to used this package inside a docker container and substitute the direct calls
 to the third party with a large instance of radis that contact the third party api
 or that have access to an eth node directly.
 
-As well be able to be geographically more close to the consumers being able to aggregate requests
+As well to be able to be geographically more close to the consumers in order to be able to aggregate requests
 that otherwise would be directed to the infura api or to a eth full node.
 
 I have as well decided to take the freedom to add a limiter for the usage of the api
@@ -28,8 +28,8 @@ I have used [exalys](https://github.com/exercism/exalysis) to run the suite of a
 ## Dependencies
 
    - [deep](github.com/go-test/deep) it has been useful in testing to compare the returned nested structure with the one expected
-   - [gorilla/mux](github.com/gorilla/mux) it provides an easy to configure routing system compatible wiht net/http
-   - [http-cache](github.com/victorspringer/http-cache)  provides a wrapper that can be used around the routing handler to cache the responses, usufule becouse allow different eviction policies, for the purpose of this package i have choosen lsu.
+   - [gorilla/mux](github.com/gorilla/mux) it provides an easy to configure routing system compatible whit net/http
+   - [http-cache](github.com/victorspringer/http-cache)  provides a wrapper that can be used around the routing handler to cache the responses, useful because it allows different eviction policies, for the purpose of this package i have chosen Lsu.
    
    thanks to go module there is no need to go get -t each package
    
@@ -79,8 +79,10 @@ ok      github.com/LucaPaterlini/infura/middlewares/logger      0.004s  coverage
 ### Load Test without limiter
 
 This test has been conducted on a i7 8 core computer 3.5gh each core assigning 1 core in the first test
-and 4 cores  in the second test to the docker image
+and 4 cores in the second test with 500Mb of ram allocated to the docker container
 using [apache benchmark](https://httpd.apache.org/docs/2.4/programs/ab.html)
+
+The ram choice its arbitrary but more than what http-cache and the scratch os requires.
 
 I will executed the test again on 4 cpu later to show the effect of the function limiter,
 with the change to apply to docker to be able to run it.
@@ -89,14 +91,9 @@ with the change to apply to docker to be able to run it.
 
 ### cpu 1
 
-First Request to cache, this first test is usefull to understand how much time does it takes
-in case the call is not already cached, as it becouse immediatly clear its completely depended
+First Request to cache, this first test is useful to understand how much time does it takes
+in case the call is not already cached, as you can see looking at the first test its clear that its completely depended
 from the latency on the third party api.
-
-I have set the ram at 500m without swap becouse I have not seen improvements after this size,
-If the size its to tight the http-cache and the os will compete for the ram access slowing the instance.
-
-
 
 #### not cached 1 cpu block endpoint 
 ```
@@ -322,7 +319,7 @@ Percentage of the requests served within a certain time (ms)
 ## Results of the load test
 
 As shown in those load tests where we have excluded the potential issue related to lack of ram
-adding a new cpu at 3.5gh speed will allow to server 2000 more requests each second,
+adding a new cpu at 3.5gh speed will allow to server 1500 more requests each second,
 as expected as well there adding more cpu reduce the impact due to the required time for sync 
 of the routines.
 
@@ -337,7 +334,7 @@ CMD ["./main","-limiter=true"]
 ```
 
 In this load test with the limiter activated its visible an improvement in performance
-even though checking if a user have already accessed its still expensive ~20% time
+even though checking if a user have already accessed its still expensive ~40% time
 of providing the actual cached copy of the endpoint but still  ~ 0.0025% of
 providing a not cached endpoint from the infura api.
 
@@ -373,33 +370,22 @@ Percentage of the requests served within a certain time (ms)
   99%     78
  100%    213 (longest request)
 
-
-
 ```
-
 
 ## Particular behaviour
 
 I have noticed a not expected behaviour in the infura api response.
 As I have written in dataCollection/testCases.go I was expecting 
-the parameter containing the length inside the header of the response
-in any case if the answer is negative or positive.
+the parameter containing the length of the http response inside the header of the response 
+itself in any case.
 
 
-## Last Note and Comments
+## Last Notes and Comments
 
-I have found interesting this test interesting, not having a clear limit of the scope
+I have found this test interesting, not having a clear limit of the scope
 of the excise I have tried to make it more real world ready as possible,
 with clear limitations on hw trying to imagine the best solution for a retail level sever.
 
 Last mention is on coding time, considering I was working full time while doing test I am proud
 of myself of been able to squeeze the 24 hours that took to me to produce it  on as Saturday,
 Sunday and a Monday after 8 hours at work. 
-
-
-
-
-
-
-
-
