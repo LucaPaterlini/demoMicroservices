@@ -1,4 +1,4 @@
-module infura
+module github.com/lucapaterlini/infura
 
 go 1.12
 
