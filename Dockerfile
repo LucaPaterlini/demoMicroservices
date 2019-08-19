@@ -1,15 +1,12 @@
 # building docker
 FROM golang:alpine as builder
 
-
 LABEL Maintainer="Luca Paterlini <paterlini.luca@gmail.com>"
-
-
 
 RUN mkdir /build 
 ADD . /build/
 WORKDIR /build
-RUN apk add --no-cache git
+RUN apk add git
 RUN apk add ca-certificates
 ENV GOBIN /go/bin
 
@@ -29,6 +26,7 @@ RUN CGO_ENABLED=0 GOOS=linux go build -a -installsuffix cgo -ldflags '-extldflag
 # execution docker
 FROM scratch
 COPY --from=builder /build/main /app/
+COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 WORKDIR /app
 CMD ["./main"]
 

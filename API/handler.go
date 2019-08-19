@@ -59,7 +59,7 @@ func GetBlockHandler(w http.ResponseWriter, r *http.Request) {
 	tmp := atomic.LoadUint64(&lastBlock)
 	if blockID > tmp {
 		w.WriteHeader(http.StatusBadRequest)
-		err := fmt.Errorf("requested id %d latest %d\n", blockID, lastBlock)
+		err := fmt.Errorf("requested id %d latest %d", blockID, lastBlock)
 		log.Println(err.Error())
 		_, _ = w.Write([]byte(err.Error()))
 		return
