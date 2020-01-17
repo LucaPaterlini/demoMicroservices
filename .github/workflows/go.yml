@@ -1,0 +1,58 @@
+name: Go
+on: [push]
+jobs:
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+
+    - name: Set up Go 1.13
+      uses: actions/setup-go@v1
+      with:
+        go-version: 1.13
+      id: go
+
+    - name: Check out code into the Go module directory
+      uses: actions/checkout@v1
+
+    - name: Get dependencies    
+      run: |
+        go get -v -t -d ./...
+        go get -u golang.org/x/lint/golint
+        go get -u github.com/golangci/golangci-lint/cmd/golangci-lint
+        go get github.com/fzipp/gocyclo
+        go get github.com/gordonklaus/ineffassign
+          
+    - name: Ineff Assign
+      run : |
+        export PATH=~/go/bin:$PATH
+        ineffassign ./...   
+    - name: Go Lint
+      run: |
+        export PATH=~/go/bin:$PATH
+        golint ./...   
+    - name: Golangci Lint
+      run: |
+        export PATH=~/go/bin:$PATH
+        golangci-lint run ./...       
+          
+    - name: Test
+      run: go test ./...
+      
+    - name: Test Race
+      run: go test -race ./...   
+    
+    - name: Go vet
+      run: go vet ./...
+      
+    - name: Go Cyclo   
+      run: |
+        export PATH=~/go/bin:$PATH
+        gocyclo -over 15 . 
+      
+    - name: Test Bench
+      run: go test -bench ./...     
+      
+    - name: Build
+      run: go build -v ./...
