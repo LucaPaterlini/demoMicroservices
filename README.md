@@ -3,9 +3,7 @@
 ## Intro
 
 This package has been written as part of a showcase of my knowledge of golang.
-To keep the system simple and ready to be scale I have choose to complete this task without using a caching database 
-[redis](https://github.com/antirez/redis)], though it can easily configured thanks to
-choice of using [http-cache](https://github.com/victorspringer/http-cache/).
+
 
 My idea is to used this package inside a docker container and substitute the direct calls
 to the third party with a large instance of radis that contact the third party api
